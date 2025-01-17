@@ -72,6 +72,36 @@ function SoundboardCard() {
 export default function Frame(
   { title }: { title?: string } = { title: PROJECT_TITLE }
 ) {
+  const appUrl = process.env.NEXT_PUBLIC_URL;
+  if (!appUrl) {
+    throw new Error('NEXT_PUBLIC_URL environment variable is not set');
+  }
+
+  // Add frame metadata
+  useEffect(() => {
+    const metaTags = [
+      { property: 'fc:frame', content: 'vNext' },
+      { property: 'fc:frame:image', content: `${appUrl}/icon.png` },
+      { property: 'fc:frame:post_url', content: `${appUrl}/api/frame` },
+      { property: 'og:image', content: `${appUrl}/icon.png` },
+    ];
+
+    metaTags.forEach(tag => {
+      const meta = document.createElement('meta');
+      meta.setAttribute('property', tag.property);
+      meta.setAttribute('content', tag.content);
+      document.head.appendChild(meta);
+    });
+
+    return () => {
+      metaTags.forEach(tag => {
+        const existing = document.querySelector(`meta[property="${tag.property}"]`);
+        if (existing) {
+          document.head.removeChild(existing);
+        }
+      });
+    };
+  }, [appUrl]);
   const [isSDKLoaded, setIsSDKLoaded] = useState(false);
   const [context, setContext] = useState<Context.FrameContext>();
 
