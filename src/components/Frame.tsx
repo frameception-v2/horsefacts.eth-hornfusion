@@ -17,19 +17,53 @@ import { createStore } from "mipd";
 import { Label } from "~/components/ui/label";
 import { PROJECT_TITLE } from "~/lib/constants";
 
-function ExampleCard() {
+const HORN_SOUNDS = [
+  {
+    name: "Classic Air Horn",
+    url: "https://www.myinstants.com/media/sounds/air-horn-club-sample.mp3"
+  },
+  {
+    name: "Train Horn",
+    url: "https://www.myinstants.com/media/sounds/train-horn.mp3"
+  },
+  {
+    name: "Party Horn",
+    url: "https://www.myinstants.com/media/sounds/party-horn.mp3"
+  },
+  {
+    name: "Fog Horn",
+    url: "https://www.myinstants.com/media/sounds/foghorn.mp3"
+  }
+];
+
+function SoundButton({ name, url }: { name: string; url: string }) {
+  const playSound = () => {
+    const audio = new Audio(url);
+    audio.play();
+  };
+
+  return (
+    <PurpleButton onClick={playSound} className="w-full mb-2">
+      {name}
+    </PurpleButton>
+  );
+}
+
+function SoundboardCard() {
   return (
     <Card className="border-neutral-200 bg-white">
       <CardHeader>
-        <CardTitle className="text-neutral-900">Welcome to the Frame Template</CardTitle>
+        <CardTitle className="text-neutral-900">Air Horn Party 🎉</CardTitle>
         <CardDescription className="text-neutral-600">
-          This is an example card that you can customize or remove
+          Press buttons to play different air horn sounds!
         </CardDescription>
       </CardHeader>
       <CardContent className="text-neutral-800">
-        <p>
-          Your frame content goes here. The text is intentionally dark to ensure good readability.
-        </p>
+        <div className="flex flex-col">
+          {HORN_SOUNDS.map((sound) => (
+            <SoundButton key={sound.url} name={sound.name} url={sound.url} />
+          ))}
+        </div>
       </CardContent>
     </Card>
   );
@@ -137,7 +171,7 @@ export default function Frame(
     >
       <div className="w-[300px] mx-auto py-2 px-2">
         <h1 className="text-2xl font-bold text-center mb-4 text-neutral-900">{title}</h1>
-        <ExampleCard />
+        <SoundboardCard />
       </div>
     </div>
   );
