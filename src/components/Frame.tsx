@@ -17,33 +17,26 @@ import { createStore } from "mipd";
 import { Label } from "~/components/ui/label";
 import { PROJECT_TITLE } from "~/lib/constants";
 
-const HORN_SOUNDS = [
-  {
-    name: "Classic Air Horn",
-    url: "https://www.myinstants.com/media/sounds/air-horn-club-sample.mp3"
-  },
-  {
-    name: "Train Horn",
-    url: "https://www.myinstants.com/media/sounds/train-horn.mp3"
-  },
-  {
-    name: "Party Horn",
-    url: "https://www.myinstants.com/media/sounds/party-horn.mp3"
-  },
-  {
-    name: "Fog Horn",
-    url: "https://www.myinstants.com/media/sounds/foghorn.mp3"
-  }
-];
+import { HORN_SOUNDS, PROJECT_TITLE, PROJECT_DESCRIPTION } from "~/lib/constants";
 
 function SoundButton({ name, url }: { name: string; url: string }) {
   const playSound = () => {
     const audio = new Audio(url);
     audio.play();
+    
+    // Send frame notification when sound is played
+    sdk.actions.sendFrameNotification({
+      title: "Honk Honk!",
+      body: `${name} was played`,
+      icon: `${process.env.NEXT_PUBLIC_URL}/icon.png`
+    }).catch(console.error);
   };
 
   return (
-    <PurpleButton onClick={playSound} className="w-full mb-2">
+    <PurpleButton 
+      onClick={playSound} 
+      className="w-full mb-2 hover:scale-105 transition-transform"
+    >
       {name}
     </PurpleButton>
   );
@@ -53,9 +46,9 @@ function SoundboardCard() {
   return (
     <Card className="border-neutral-200 bg-white">
       <CardHeader>
-        <CardTitle className="text-neutral-900">Air Horn Party 🎉</CardTitle>
+        <CardTitle className="text-neutral-900">{PROJECT_TITLE}</CardTitle>
         <CardDescription className="text-neutral-600">
-          Press buttons to play different air horn sounds!
+          {PROJECT_DESCRIPTION}
         </CardDescription>
       </CardHeader>
       <CardContent className="text-neutral-800">
